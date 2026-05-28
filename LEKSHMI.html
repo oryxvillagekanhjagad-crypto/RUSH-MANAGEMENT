@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oryx Village Queue</title>
+
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#f3f3f3;
+margin:0;
+padding:15px;
+max-width:700px;
+margin:auto;
+}
+
+h2{
+text-align:center;
+margin-bottom:15px;
+}
+
+.box,.card,.stats{
+background:white;
+padding:15px;
+border-radius:12px;
+margin-bottom:15px;
+box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+input{
+width:100%;
+padding:12px;
+margin:6px 0;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:16px;
+box-sizing:border-box;
+}
+
+button{
+border:none;
+padding:10px 12px;
+border-radius:8px;
+cursor:pointer;
+font-size:14px;
+margin:4px 2px;
+}
+
+.add{
+width:100%;
+background:#222;
+color:white;
+}
+
+.waiting{
+border-left:8px solid orange;
+}
+
+.ready{
+border-left:8px solid green;
+}
+
+.attempted{
+border-left:8px solid red;
+}
+
+.call{
+background:#444;
+color:white;
+}
+
+.green{
+background:green;
+color:white;
+}
+
+.red{
+background:#d32f2f;
+color:white;
+}
+
+.orange{
+background:orange;
+color:white;
+}
+
+.name{
+font-size:20px;
+font-weight:bold;
+margin-bottom:6px;
+}
+
+.stats{
+display:flex;
+justify-content:space-between;
+text-align:center;
+font-weight:bold;
+font-size:14px;
+}
+
+.stats div{
+flex:1;
+}
+
+.actions{
+margin-top:10px;
+display:flex;
+flex-wrap:wrap;
+}
+
+.time{
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Oryx Village Queue</h2>
+
+<div class="stats">
+<div>Total<br><span id="total">0</span></div>
+<div>Waiting<br><span id="waitingCount">0</span></div>
+<div>Ready<br><span id="readyCount">0</span></div>
+<div>Attempted<br><span id="attemptedCount">0</span></div>
+</div>
+
+<div class="box">
+<input
+id="search"
+placeholder="Search Name or Phone"
+onkeyup="render()">
+</div>
+
+<div class="box">
+<input id="name" placeholder="Customer Name">
+
+<input
+id="people"
+type="number"
+placeholder="How Many People">
+
+<input
+id="time"
+placeholder="Time Optional">
+
+<input
+id="phone"
+type="tel"
+maxlength="10"
+placeholder="Phone Number 10 digits">
+
+<button
+class="add"
+onclick="addCustomer()">
+Add Customer
+</button>
+</div>
+
+<div id="list"></div>
+
+<script>
+
+let customers =
+JSON.parse(
+localStorage.getItem('oryxQueue')
+) || [];
+
+function saveData(){
+localStorage.setItem(
+'oryxQueue',
+JSON.stringify(customers)
+);
+}
+
+function addCustomer(){
+
+let name =
+document.getElementById('name')
+.value.trim();
+
+let people =
+document.getElementById('people')
+.value;
+
+let time =
+document.getElementById('time')
+.value.trim();
+
+let phone =
+document.getElementById('phone')
+.value.trim();
+
+if(name=='' || people==''){
+alert('Enter name and people');
+return;
+}
+
+if(phone!='' && !/^\d{10}$/.test(phone)){
+alert(
+'Phone number must be 10 digits'
+);
+return;
+}
+
+customers.push({
+name,
+people,
+time,
+phone,
+status:'waiting',
+added:Date.now(),
+readyTime:null
+});
+
+saveData();
+
+document.getElementById('name').value='';
+document.getElementById('people').value='';
+document.getElementById('time').value='';
+document.getElementById('phone').value='';
+
+render();
+}
+
+function render(){
+
+let search =
+document.getElementById('search')
+.value
+.toLowerCase()
+.trim();
+
+let html='';
+
+customers.forEach(function(c,i){
+
+let name =
+(c.name || '')
+.toLowerCase();
+
+let phone =
+(c.phone || '');
+
+if(
+search &&
+!name.includes(search) &&
+!phone.includes(search)
+){
+return;
+}
+
+let status='🟠 Waiting';
+let cls='waiting';
+
+if(c.status==='ready'){
+status='🟢 Ready';
+cls='ready';
+}
+
+if(c.status==='attempted'){
+status='🔴 Attempted';
+cls='attempted';
+}
+
+let mins=0;
+let label='Waiting Time';
+
+if(c.status==='ready' && c.readyTime){
+
+mins =
+Math.floor(
+(Date.now()-c.readyTime)
+/60000
+);
+
+label='Ready Time';
+
+}else{
+
+mins =
+Math.floor(
+(Date.now()-c.added)
+/60000
+);
+
+}
+
+html += `
+<div class="card ${cls}">
+
+<div class="name">
+${c.name}
+</div>
+
+<p>${status}</p>
+
+<p>
+People:
+<b>${c.people}</b>
+</p>
+
+<p>
+Time:
+<b>${c.time || '-'}</b>
+</p>
+
+<p>
+Phone:
+<b>${c.phone || '-'}</b>
+</p>
+
+<p class="time">
+${label}: ${mins} mins
+</p>
+
+<div class="actions">
+
+${c.phone ?
+`<button class="call"
+onclick="callCustomer('${c.phone}')">
+📞 Call
+</button>`
+:''}
+
+<button
+class="green"
+onclick="setReady(${i})">
+Ready
+</button>
+
+<button
+class="red"
+onclick="setAttempted(${i})">
+Attempted
+</button>
+
+<button
+class="orange"
+onclick="releaseCustomer(${i})">
+Release
+</button>
+
+</div>
+</div>
+`;
+});
+
+document.getElementById('list')
+.innerHTML=html;
+
+document.getElementById('total')
+.innerText=customers.length;
+
+document.getElementById('waitingCount')
+.innerText=
+customers.filter(
+x=>x.status==='waiting'
+).length;
+
+document.getElementById('readyCount')
+.innerText=
+customers.filter(
+x=>x.status==='ready'
+).length;
+
+document.getElementById('attemptedCount')
+.innerText=
+customers.filter(
+x=>x.status==='attempted'
+).length;
+}
+
+function setReady(i){
+
+customers[i].status='ready';
+
+if(!customers[i].readyTime){
+customers[i].readyTime=
+Date.now();
+}
+
+saveData();
+render();
+}
+
+function setAttempted(i){
+customers[i].status='attempted';
+saveData();
+render();
+}
+
+function releaseCustomer(i){
+
+if(confirm(
+'Release customer?'
+)){
+customers.splice(i,1);
+saveData();
+render();
+}
+}
+
+function callCustomer(phone){
+
+if(phone &&
+/^\d{10}$/.test(phone)){
+window.location.href =
+'tel:' + phone;
+}else{
+alert(
+'Valid phone number not found'
+);
+}
+}
+
+render();
+
+setInterval(
+render,
+60000
+);
+
+</script>
+
+</body>
+</html>
