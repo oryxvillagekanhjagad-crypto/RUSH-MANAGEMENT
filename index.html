@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -143,17 +144,36 @@ font-size:15px;
 <h2>Oryx Village Queue</h2>
 
 <div class="stats">
-<div>Total<br><span id="total">0</span></div>
-<div>Waiting<br><span id="waitingCount">0</span></div>
-<div>Ready<br><span id="readyCount">0</span></div>
-<div>Attempted<br><span id="attemptedCount">0</span></div>
+
+<div>
+Total<br>
+<span id="total">0</span>
+</div>
+
+<div>
+Waiting<br>
+<span id="waitingCount">0</span>
+</div>
+
+<div>
+Ready<br>
+<span id="readyCount">0</span>
+</div>
+
+<div>
+Attempted<br>
+<span id="attemptedCount">0</span>
+</div>
+
 </div>
 
 <div class="box">
+
 <input
 id="search"
 placeholder="Search Name or Phone"
 onkeyup="render()">
+
 </div>
 
 <div class="box">
@@ -223,12 +243,18 @@ document.getElementById('phone')
 
 if(name=='' || people==''){
 
-alert('Enter name and people');
+alert(
+'Enter name and people'
+);
+
 return;
 
 }
 
-if(phone!='' && !/^\d{10}$/.test(phone)){
+if(
+phone!='' &&
+!/^\d{10}$/.test(phone)
+){
 
 alert(
 'Phone number must be 10 digits'
@@ -275,12 +301,28 @@ let sortedCustomers =
 [...customers].sort((a,b)=>{
 
 const order = {
+
 waiting:0,
 ready:1,
 attempted:2
+
 };
 
-return order[a.status] - order[b.status];
+if(
+order[a.status] !==
+order[b.status]
+){
+
+return (
+order[a.status] -
+order[b.status]
+);
+
+}
+
+/* FIFO */
+
+return a.added - b.added;
 
 });
 
@@ -324,7 +366,10 @@ cls='attempted';
 let mins=0;
 let label='Waiting Time';
 
-if(c.status==='ready' && c.readyTime){
+if(
+c.status==='ready' &&
+c.readyTime
+){
 
 mins =
 Math.floor(
@@ -441,14 +486,17 @@ function setReady(i){
 
 customers[i].status='ready';
 
-if(!customers[i].readyTime){
+if(
+!customers[i].readyTime
+){
 
-customers[i].readyTime=
+customers[i].readyTime =
 Date.now();
 
 }
 
 saveData();
+
 render();
 
 }
@@ -458,19 +506,23 @@ function setAttempted(i){
 customers[i].status='attempted';
 
 saveData();
+
 render();
 
 }
 
 function releaseCustomer(i){
 
-if(confirm(
+if(
+confirm(
 'Release customer?'
-)){
+)
+){
 
 customers.splice(i,1);
 
 saveData();
+
 render();
 
 }
@@ -508,3 +560,4 @@ render,
 
 </body>
 </html>
+```
