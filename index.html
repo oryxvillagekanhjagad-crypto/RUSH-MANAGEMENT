@@ -442,36 +442,78 @@ Math.floor(
 /60000
 );
 
-/* STRONG DARK AGE EFFECT */
+/* FULL SOLID AGING COLORS */
 
-let opacity = 0.15;
+let dynamicStyle = '';
 
-if(mins > 15){
-opacity = 0.35;
-}
-
-if(mins > 30){
-opacity = 0.55;
-}
-
-if(mins > 60){
-opacity = 0.75;
-}
+if(c.status==='waiting'){
 
 if(mins > 120){
-opacity = 0.90;
+
+dynamicStyle =
+'background:#7a3b00;color:white;border-color:#ff9800;';
+
+}else if(mins > 60){
+
+dynamicStyle =
+'background:#b85c00;color:white;border-color:#ff9800;';
+
+}else if(mins > 30){
+
+dynamicStyle =
+'background:#e67e00;color:white;border-color:#ff9800;';
+
+}
+
+}
+
+if(c.status==='ready'){
+
+if(mins > 120){
+
+dynamicStyle =
+'background:#004d1a;color:white;border-color:#28a745;';
+
+}else if(mins > 60){
+
+dynamicStyle =
+'background:#0b6b2b;color:white;border-color:#28a745;';
+
+}else if(mins > 30){
+
+dynamicStyle =
+'background:#198754;color:white;border-color:#28a745;';
+
+}
+
+}
+
+if(c.status==='attempted'){
+
+if(mins > 120){
+
+dynamicStyle =
+'background:#5c0000;color:white;border-color:#dc3545;';
+
+}else if(mins > 60){
+
+dynamicStyle =
+'background:#8b0000;color:white;border-color:#dc3545;';
+
+}else if(mins > 30){
+
+dynamicStyle =
+'background:#b22222;color:white;border-color:#dc3545;';
+
+}
+
 }
 
 html += `
 
 <div
 class="card ${cls}"
-style="
-box-shadow:
-0 0 0 9999px
-rgba(0,0,0,${opacity})
-inset;
-">
+style="${dynamicStyle}">
 
 <div class="name">
 ${c.name}
@@ -709,4 +751,3 @@ render,
 
 </body>
 </html>
-
