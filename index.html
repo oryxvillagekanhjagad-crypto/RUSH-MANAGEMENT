@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,6 +23,22 @@ margin-bottom:15px;
 color:#222;
 }
 
+.topbar{
+display:flex;
+justify-content:flex-end;
+margin-bottom:10px;
+}
+
+.dustbin{
+background:#111;
+color:white;
+font-size:18px;
+padding:10px 14px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+}
+
 .box,.stats{
 background:white;
 padding:15px;
@@ -36,6 +53,7 @@ border-radius:14px;
 margin-bottom:15px;
 box-shadow:0 2px 10px rgba(0,0,0,.08);
 transition:.2s;
+border:2px solid transparent;
 }
 
 .card:hover{
@@ -44,19 +62,19 @@ transform:translateY(-2px);
 
 .waiting{
 background:#fff3cd;
-border:2px solid #ff9800;
+border-color:#ff9800;
 color:#7a5200;
 }
 
 .ready{
 background:#d4edda;
-border:2px solid #28a745;
+border-color:#28a745;
 color:#155724;
 }
 
 .attempted{
 background:#f8d7da;
-border:2px solid #dc3545;
+border-color:#dc3545;
 color:#721c24;
 }
 
@@ -68,6 +86,7 @@ border:1px solid #ccc;
 border-radius:10px;
 font-size:16px;
 box-sizing:border-box;
+text-transform:uppercase;
 }
 
 button{
@@ -148,25 +167,35 @@ margin-top:8px;
 
 <h2>Oryx Village Queue</h2>
 
+<div class="topbar">
+
+<button
+class="dustbin"
+onclick="clearAllCustomers()">
+🗑️
+</button>
+
+</div>
+
 <div class="stats">
 
 <div>
-Total<br>
+TOTAL<br>
 <span id="total">0</span>
 </div>
 
 <div>
-Waiting<br>
+WAITING<br>
 <span id="waitingCount">0</span>
 </div>
 
 <div>
-Ready<br>
+READY<br>
 <span id="readyCount">0</span>
 </div>
 
 <div>
-Attempted<br>
+ATTEMPTED<br>
 <span id="attemptedCount">0</span>
 </div>
 
@@ -176,7 +205,7 @@ Attempted<br>
 
 <input
 id="search"
-placeholder="Search Name or Phone"
+placeholder="SEARCH NAME OR PHONE"
 onkeyup="render()">
 
 </div>
@@ -185,27 +214,35 @@ onkeyup="render()">
 
 <input
 id="name"
-placeholder="Customer Name">
+placeholder="CUSTOMER NAME"
+oninput="
+this.value =
+this.value.toUpperCase()
+">
 
 <input
 id="people"
 type="number"
-placeholder="How Many People">
+placeholder="HOW MANY PEOPLE">
 
 <input
 id="time"
-placeholder="Time Optional">
+placeholder="TIME OPTIONAL"
+oninput="
+this.value =
+this.value.toUpperCase()
+">
 
 <input
 id="phone"
 type="tel"
 maxlength="10"
-placeholder="Phone Number">
+placeholder="PHONE NUMBER">
 
 <button
 class="add"
 onclick="addCustomer()">
-Add Customer
+ADD CUSTOMER
 </button>
 
 </div>
@@ -218,6 +255,22 @@ let customers =
 JSON.parse(
 localStorage.getItem('oryxQueue')
 ) || [];
+
+/* AUTO REMOVE OLD CUSTOMERS */
+
+customers =
+customers.filter(c => {
+
+let ageHours =
+(Date.now() - c.added)
+/
+(1000*60*60);
+
+return ageHours < 24;
+
+});
+
+saveData();
 
 function saveData(){
 
@@ -232,7 +285,9 @@ function addCustomer(){
 
 let name =
 document.getElementById('name')
-.value.trim();
+.value
+.trim()
+.toUpperCase();
 
 let people =
 document.getElementById('people')
@@ -240,7 +295,9 @@ document.getElementById('people')
 
 let time =
 document.getElementById('time')
-.value.trim();
+.value
+.trim()
+.toUpperCase();
 
 let phone =
 document.getElementById('phone')
@@ -249,7 +306,7 @@ document.getElementById('phone')
 if(name===''){
 
 alert(
-'Customer name is required'
+'CUSTOMER NAME IS REQUIRED'
 );
 
 return;
@@ -262,7 +319,7 @@ Number(people)<=0
 ){
 
 alert(
-'Enter valid number of people'
+'ENTER VALID NUMBER OF PEOPLE'
 );
 
 return;
@@ -275,7 +332,7 @@ phone!='' &&
 ){
 
 alert(
-'Phone number must be 10 digits'
+'PHONE NUMBER MUST BE 10 DIGITS'
 );
 
 return;
@@ -339,6 +396,8 @@ order[b.status]
 
 }
 
+/* FIFO */
+
 return a.added - b.added;
 
 });
@@ -363,52 +422,55 @@ search &&
 return;
 }
 
-let status='🟠 Waiting';
+let status='🟠 WAITING';
 let cls='waiting';
 
 if(c.status==='ready'){
 
-status='🟢 Ready';
+status='🟢 READY';
 cls='ready';
 
 }
 
 if(c.status==='attempted'){
 
-status='🔴 Attempted';
+status='🔴 ATTEMPTED';
 cls='attempted';
 
 }
 
-let mins=0;
-let label='Waiting Time';
-
-if(
-c.status==='ready' &&
-c.readyTime
-){
-
-mins =
-Math.floor(
-(Date.now()-c.readyTime)
-/60000
-);
-
-label='Ready Time';
-
-}else{
-
-mins =
+let mins =
 Math.floor(
 (Date.now()-c.added)
 /60000
 );
 
+/* AGE COLOR EFFECT */
+
+let opacity = 0.10;
+
+if(mins > 30){
+opacity = 0.20;
+}
+
+if(mins > 60){
+opacity = 0.35;
+}
+
+if(mins > 120){
+opacity = 0.50;
 }
 
 html += `
 
-<div class="card ${cls}">
+<div
+class="card ${cls}"
+style="
+box-shadow:
+0 0 0 9999px
+rgba(0,0,0,${opacity})
+inset;
+">
 
 <div class="name">
 ${c.name}
@@ -417,31 +479,32 @@ ${c.name}
 <p>${status}</p>
 
 <p>
-People:
+PEOPLE:
 <b>${c.people}</b>
 </p>
 
 <p>
-Time:
+TIME:
 <b>${c.time || '-'}</b>
 </p>
 
 <p>
-Phone:
+PHONE:
 <b>${c.phone || '-'}</b>
 </p>
 
 ${c.table ?
 
 `<p class="table">
-🍽️ Table:
+🍽️ TABLE:
 <b>${c.table}</b>
 </p>`
 
 :''}
 
 <p class="time">
-${label}: ${mins} mins
+WAITING TIME:
+${mins} MINS
 </p>
 
 <div class="actions">
@@ -451,7 +514,7 @@ ${c.phone ?
 `<button
 class="call"
 onclick="callCustomer('${c.phone}')">
-📞 Call
+📞 CALL
 </button>`
 
 :''}
@@ -459,19 +522,19 @@ onclick="callCustomer('${c.phone}')">
 <button
 class="green"
 onclick="setReady(${originalIndex})">
-Ready
+READY
 </button>
 
 <button
 class="red"
 onclick="setAttempted(${originalIndex})">
-Attempted
+ATTEMPTED
 </button>
 
 <button
 class="orange"
 onclick="releaseCustomer(${originalIndex})">
-Release
+RELEASE
 </button>
 
 </div>
@@ -512,7 +575,7 @@ function setReady(i){
 
 let table =
 prompt(
-'Enter table number'
+'ENTER TABLE NAME / NUMBER'
 );
 
 if(
@@ -521,15 +584,20 @@ table.trim()===''
 ){
 
 alert(
-'Table number required'
+'TABLE NAME REQUIRED'
 );
 
 return;
 
 }
 
+table =
+table
+.trim()
+.toUpperCase();
+
 customers[i].table =
-table.trim();
+table;
 
 customers[i].status='ready';
 
@@ -562,11 +630,44 @@ function releaseCustomer(i){
 
 if(
 confirm(
-'Release customer?'
+'RELEASE CUSTOMER?'
 )
 ){
 
 customers.splice(i,1);
+
+saveData();
+
+render();
+
+}
+
+}
+
+function clearAllCustomers(){
+
+let pass =
+prompt(
+'ENTER PASSWORD'
+);
+
+if(pass!=='2020'){
+
+alert(
+'WRONG PASSWORD'
+);
+
+return;
+
+}
+
+if(
+confirm(
+'DELETE ALL CUSTOMERS?'
+)
+){
+
+customers=[];
 
 saveData();
 
@@ -589,7 +690,7 @@ window.location.href =
 }else{
 
 alert(
-'Valid phone number not found'
+'VALID PHONE NUMBER NOT FOUND'
 );
 
 }
@@ -607,3 +708,4 @@ render,
 
 </body>
 </html>
+```
