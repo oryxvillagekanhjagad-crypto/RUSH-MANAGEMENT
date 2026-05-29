@@ -1,4 +1,4 @@
-html
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -136,6 +136,12 @@ font-weight:bold;
 font-size:15px;
 }
 
+.table{
+font-size:16px;
+font-weight:bold;
+margin-top:8px;
+}
+
 </style>
 </head>
 
@@ -241,10 +247,23 @@ let phone =
 document.getElementById('phone')
 .value.trim();
 
-if(name=='' || people==''){
+if(name===''){
 
 alert(
-'Enter name and people'
+'Customer name is required'
+);
+
+return;
+
+}
+
+if(
+people==='' ||
+Number(people)<=0
+){
+
+alert(
+'Enter valid number of people'
 );
 
 return;
@@ -271,6 +290,7 @@ people,
 time,
 phone,
 status:'waiting',
+table:'',
 added:Date.now(),
 readyTime:null
 
@@ -319,8 +339,6 @@ order[b.status]
 );
 
 }
-
-/* FIFO */
 
 return a.added - b.added;
 
@@ -414,6 +432,15 @@ Phone:
 <b>${c.phone || '-'}</b>
 </p>
 
+${c.table ?
+
+`<p class="table">
+🍽️ Table:
+<b>${c.table}</b>
+</p>`
+
+:''}
+
 <p class="time">
 ${label}: ${mins} mins
 </p>
@@ -484,13 +511,34 @@ x=>x.status==='attempted'
 
 function setReady(i){
 
+let table =
+prompt(
+'Enter table number'
+);
+
+if(
+table===null ||
+table.trim()===''
+){
+
+alert(
+'Table number required'
+);
+
+return;
+
+}
+
+customers[i].table =
+table.trim();
+
 customers[i].status='ready';
 
 if(
 !customers[i].readyTime
 ){
 
-customers[i].readyTime =
+customers[i].readyTime=
 Date.now();
 
 }
@@ -560,3 +608,4 @@ render,
 
 </body>
 </html>
+```
