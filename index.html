@@ -6,6 +6,7 @@
 <title>Oryx Village Queue</title>
 
 <style>
+
 body{
 font-family:Arial,sans-serif;
 background:#f3f3f3;
@@ -18,14 +19,45 @@ margin:auto;
 h2{
 text-align:center;
 margin-bottom:15px;
+color:#222;
 }
 
-.box,.card,.stats{
+.box,.stats{
 background:white;
 padding:15px;
-border-radius:12px;
+border-radius:14px;
 margin-bottom:15px;
-box-shadow:0 2px 8px rgba(0,0,0,.08);
+box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.card{
+padding:15px;
+border-radius:14px;
+margin-bottom:15px;
+box-shadow:0 2px 10px rgba(0,0,0,.08);
+transition:.2s;
+}
+
+.card:hover{
+transform:translateY(-2px);
+}
+
+.waiting{
+background:#fff3cd;
+border:2px solid #ff9800;
+color:#7a5200;
+}
+
+.ready{
+background:#d4edda;
+border:2px solid #28a745;
+color:#155724;
+}
+
+.attempted{
+background:#f8d7da;
+border:2px solid #dc3545;
+color:#721c24;
 }
 
 input{
@@ -33,18 +65,19 @@ width:100%;
 padding:12px;
 margin:6px 0;
 border:1px solid #ccc;
-border-radius:8px;
+border-radius:10px;
 font-size:16px;
 box-sizing:border-box;
 }
 
 button{
 border:none;
-padding:10px 12px;
-border-radius:8px;
+padding:10px 14px;
+border-radius:10px;
 cursor:pointer;
 font-size:14px;
 margin:4px 2px;
+font-weight:bold;
 }
 
 .add{
@@ -53,42 +86,30 @@ background:#222;
 color:white;
 }
 
-.waiting{
-border-left:8px solid orange;
-}
-
-.ready{
-border-left:8px solid green;
-}
-
-.attempted{
-border-left:8px solid red;
-}
-
 .call{
 background:#444;
 color:white;
 }
 
 .green{
-background:green;
+background:#28a745;
 color:white;
 }
 
 .red{
-background:#d32f2f;
+background:#dc3545;
 color:white;
 }
 
 .orange{
-background:orange;
+background:#ff9800;
 color:white;
 }
 
 .name{
-font-size:20px;
+font-size:22px;
 font-weight:bold;
-margin-bottom:6px;
+margin-bottom:8px;
 }
 
 .stats{
@@ -111,7 +132,9 @@ flex-wrap:wrap;
 
 .time{
 font-weight:bold;
+font-size:15px;
 }
+
 </style>
 </head>
 
@@ -134,7 +157,10 @@ onkeyup="render()">
 </div>
 
 <div class="box">
-<input id="name" placeholder="Customer Name">
+
+<input
+id="name"
+placeholder="Customer Name">
 
 <input
 id="people"
@@ -149,13 +175,14 @@ placeholder="Time Optional">
 id="phone"
 type="tel"
 maxlength="10"
-placeholder="Phone Number 10 digits">
+placeholder="Phone Number">
 
 <button
 class="add"
 onclick="addCustomer()">
 Add Customer
 </button>
+
 </div>
 
 <div id="list"></div>
@@ -168,10 +195,12 @@ localStorage.getItem('oryxQueue')
 ) || [];
 
 function saveData(){
+
 localStorage.setItem(
 'oryxQueue',
 JSON.stringify(customers)
 );
+
 }
 
 function addCustomer(){
@@ -193,18 +222,24 @@ document.getElementById('phone')
 .value.trim();
 
 if(name=='' || people==''){
+
 alert('Enter name and people');
 return;
+
 }
 
 if(phone!='' && !/^\d{10}$/.test(phone)){
+
 alert(
 'Phone number must be 10 digits'
 );
+
 return;
+
 }
 
 customers.push({
+
 name,
 people,
 time,
@@ -212,6 +247,7 @@ phone,
 status:'waiting',
 added:Date.now(),
 readyTime:null
+
 });
 
 saveData();
@@ -222,6 +258,7 @@ document.getElementById('time').value='';
 document.getElementById('phone').value='';
 
 render();
+
 }
 
 function render(){
@@ -234,7 +271,23 @@ document.getElementById('search')
 
 let html='';
 
-customers.forEach(function(c,i){
+let sortedCustomers =
+[...customers].sort((a,b)=>{
+
+const order = {
+waiting:0,
+ready:1,
+attempted:2
+};
+
+return order[a.status] - order[b.status];
+
+});
+
+sortedCustomers.forEach(function(c){
+
+let originalIndex =
+customers.indexOf(c);
 
 let name =
 (c.name || '')
@@ -255,13 +308,17 @@ let status='🟠 Waiting';
 let cls='waiting';
 
 if(c.status==='ready'){
+
 status='🟢 Ready';
 cls='ready';
+
 }
 
 if(c.status==='attempted'){
+
 status='🔴 Attempted';
 cls='attempted';
+
 }
 
 let mins=0;
@@ -288,6 +345,7 @@ Math.floor(
 }
 
 html += `
+
 <div class="card ${cls}">
 
 <div class="name">
@@ -318,33 +376,39 @@ ${label}: ${mins} mins
 <div class="actions">
 
 ${c.phone ?
-`<button class="call"
+
+`<button
+class="call"
 onclick="callCustomer('${c.phone}')">
 📞 Call
 </button>`
+
 :''}
 
 <button
 class="green"
-onclick="setReady(${i})">
+onclick="setReady(${originalIndex})">
 Ready
 </button>
 
 <button
 class="red"
-onclick="setAttempted(${i})">
+onclick="setAttempted(${originalIndex})">
 Attempted
 </button>
 
 <button
 class="orange"
-onclick="releaseCustomer(${i})">
+onclick="releaseCustomer(${originalIndex})">
 Release
 </button>
 
 </div>
+
 </div>
+
 `;
+
 });
 
 document.getElementById('list')
@@ -370,6 +434,7 @@ document.getElementById('attemptedCount')
 customers.filter(
 x=>x.status==='attempted'
 ).length;
+
 }
 
 function setReady(i){
@@ -377,18 +442,24 @@ function setReady(i){
 customers[i].status='ready';
 
 if(!customers[i].readyTime){
+
 customers[i].readyTime=
 Date.now();
+
 }
 
 saveData();
 render();
+
 }
 
 function setAttempted(i){
+
 customers[i].status='attempted';
+
 saveData();
 render();
+
 }
 
 function releaseCustomer(i){
@@ -396,23 +467,34 @@ function releaseCustomer(i){
 if(confirm(
 'Release customer?'
 )){
+
 customers.splice(i,1);
+
 saveData();
 render();
+
 }
+
 }
 
 function callCustomer(phone){
 
-if(phone &&
-/^\d{10}$/.test(phone)){
+if(
+phone &&
+/^\d{10}$/.test(phone)
+){
+
 window.location.href =
 'tel:' + phone;
+
 }else{
+
 alert(
 'Valid phone number not found'
 );
+
 }
+
 }
 
 render();
