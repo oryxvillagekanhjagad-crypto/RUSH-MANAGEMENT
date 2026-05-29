@@ -60,21 +60,21 @@ transform:translateY(-2px);
 }
 
 .waiting{
-background:#fff3cd;
+background:#ff9800;
 border-color:#ff9800;
-color:#7a5200;
+color:white;
 }
 
 .ready{
-background:#d4edda;
+background:#28a745;
 border-color:#28a745;
-color:#155724;
+color:white;
 }
 
 .attempted{
-background:#f8d7da;
+background:#dc3545;
 border-color:#dc3545;
-color:#721c24;
+color:white;
 }
 
 input{
@@ -442,69 +442,72 @@ Math.floor(
 /60000
 );
 
-/* FULL SOLID AGING COLORS */
+/* PURE SOLID COLORS */
 
 let dynamicStyle = '';
 
 if(c.status==='waiting'){
 
+dynamicStyle =
+'background:#ff9800;color:white;border-color:#ff9800;';
+
+if(mins > 30){
+dynamicStyle =
+'background:#e67e00;color:white;border-color:#e67e00;';
+}
+
+if(mins > 60){
+dynamicStyle =
+'background:#cc7000;color:white;border-color:#cc7000;';
+}
+
 if(mins > 120){
-
 dynamicStyle =
-'background:#7a3b00;color:white;border-color:#ff9800;';
-
-}else if(mins > 60){
-
-dynamicStyle =
-'background:#b85c00;color:white;border-color:#ff9800;';
-
-}else if(mins > 30){
-
-dynamicStyle =
-'background:#e67e00;color:white;border-color:#ff9800;';
-
+'background:#995200;color:white;border-color:#995200;';
 }
 
 }
 
 if(c.status==='ready'){
 
+dynamicStyle =
+'background:#28a745;color:white;border-color:#28a745;';
+
+if(mins > 30){
+dynamicStyle =
+'background:#1e7e34;color:white;border-color:#1e7e34;';
+}
+
+if(mins > 60){
+dynamicStyle =
+'background:#155d27;color:white;border-color:#155d27;';
+}
+
 if(mins > 120){
-
 dynamicStyle =
-'background:#004d1a;color:white;border-color:#28a745;';
-
-}else if(mins > 60){
-
-dynamicStyle =
-'background:#0b6b2b;color:white;border-color:#28a745;';
-
-}else if(mins > 30){
-
-dynamicStyle =
-'background:#198754;color:white;border-color:#28a745;';
-
+'background:#0f3e1b;color:white;border-color:#0f3e1b;';
 }
 
 }
 
 if(c.status==='attempted'){
 
+dynamicStyle =
+'background:#dc3545;color:white;border-color:#dc3545;';
+
+if(mins > 30){
+dynamicStyle =
+'background:#b02a37;color:white;border-color:#b02a37;';
+}
+
+if(mins > 60){
+dynamicStyle =
+'background:#842029;color:white;border-color:#842029;';
+}
+
 if(mins > 120){
-
 dynamicStyle =
-'background:#5c0000;color:white;border-color:#dc3545;';
-
-}else if(mins > 60){
-
-dynamicStyle =
-'background:#8b0000;color:white;border-color:#dc3545;';
-
-}else if(mins > 30){
-
-dynamicStyle =
-'background:#b22222;color:white;border-color:#dc3545;';
-
+'background:#5c151c;color:white;border-color:#5c151c;';
 }
 
 }
