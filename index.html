@@ -395,8 +395,6 @@ order[b.status]
 
 }
 
-/* FIFO */
-
 return a.added - b.added;
 
 });
@@ -444,20 +442,24 @@ Math.floor(
 /60000
 );
 
-/* AGE COLOR EFFECT */
+/* STRONG DARK AGE EFFECT */
 
-let opacity = 0.10;
+let opacity = 0.15;
 
-if(mins > 30){
-opacity = 0.20;
-}
-
-if(mins > 60){
+if(mins > 15){
 opacity = 0.35;
 }
 
+if(mins > 30){
+opacity = 0.55;
+}
+
+if(mins > 60){
+opacity = 0.75;
+}
+
 if(mins > 120){
-opacity = 0.50;
+opacity = 0.90;
 }
 
 html += `
@@ -707,3 +709,4 @@ render,
 
 </body>
 </html>
+
