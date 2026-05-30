@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #000000;
             min-height: 100vh;
             padding: 20px;
         }
@@ -25,26 +25,26 @@
 
         /* Header Styles */
         .header {
-            background: white;
+            background: #ffffff;
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.1);
         }
 
         h1 {
-            color: #333;
+            color: #000000;
             margin-bottom: 20px;
             text-align: center;
         }
 
         /* Form Styles */
         .form-section {
-            background: white;
+            background: #ffffff;
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.1);
         }
 
         .form-group {
@@ -54,22 +54,24 @@
         label {
             display: block;
             margin-bottom: 5px;
-            color: #555;
+            color: #000000;
             font-weight: 500;
         }
 
         input, select {
             width: 100%;
             padding: 10px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #cccccc;
             border-radius: 8px;
             font-size: 14px;
             transition: all 0.3s;
+            background: #ffffff;
+            color: #000000;
         }
 
         input:focus, select:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #000000;
         }
 
         /* Button Styles */
@@ -85,13 +87,13 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #000000;
             color: white;
         }
 
         .btn-primary:hover {
+            background: #333333;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
         .btn-warning {
@@ -162,8 +164,8 @@
         }
 
         .mode-attempted.active {
-            background: #2196f3;
-            box-shadow: 0 0 0 3px #2196f3, 0 0 0 6px rgba(33,150,243,0.3);
+            background: #f44336;
+            box-shadow: 0 0 0 3px #f44336, 0 0 0 6px rgba(244,67,54,0.3);
         }
 
         /* Customer Cards */
@@ -175,12 +177,25 @@
         }
 
         .customer-card {
-            background: white;
+            background: #ffffff;
             border-radius: 15px;
             padding: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(255,255,255,0.1);
             transition: all 0.3s;
             animation: fadeIn 0.5s ease-in;
+            border-left: 5px solid;
+        }
+
+        .customer-card.status-wait-card {
+            border-left-color: #ff9800;
+        }
+
+        .customer-card.status-ready-card {
+            border-left-color: #4caf50;
+        }
+
+        .customer-card.status-attempted-card {
+            border-left-color: #f44336;
         }
 
         @keyframes fadeIn {
@@ -196,18 +211,18 @@
 
         .customer-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
         }
 
         .customer-name {
             font-size: 18px;
             font-weight: bold;
-            color: #333;
+            color: #000000;
             margin-bottom: 10px;
         }
 
         .customer-details {
-            color: #666;
+            color: #333333;
             margin-bottom: 10px;
             font-size: 14px;
         }
@@ -232,14 +247,15 @@
         }
 
         .status-attempted {
-            background: #e3f2fd;
-            color: #2196f3;
+            background: #ffebee;
+            color: #f44336;
         }
 
         .card-buttons {
             margin-top: 15px;
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         /* Alert Box */
@@ -291,7 +307,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.8);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -324,6 +340,55 @@
             justify-content: flex-end;
         }
 
+        /* Prompt Dialog */
+        .prompt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .prompt-dialog {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .prompt-dialog h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .prompt-dialog p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .prompt-dialog input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .prompt-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
         /* Stats */
         .stats {
             display: flex;
@@ -332,23 +397,29 @@
         }
 
         .stat-card {
-            background: white;
+            background: #ffffff;
             border-radius: 10px;
             padding: 15px;
             flex: 1;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(255,255,255,0.1);
         }
 
         .stat-number {
             font-size: 28px;
             font-weight: bold;
-            color: #667eea;
+            color: #000000;
         }
 
         .stat-label {
-            color: #666;
+            color: #333333;
             margin-top: 5px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
     </style>
 </head>
@@ -382,9 +453,19 @@
                 <label>Customer Name *</label>
                 <input type="text" id="customerName" placeholder="Enter customer name">
             </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Number of Peoples *</label>
+                    <input type="number" id="numberOfPeoples" placeholder="Number of peoples" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Time *</label>
+                    <input type="time" id="timeOption">
+                </div>
+            </div>
             <div class="form-group">
-                <label>Phone Number *</label>
-                <input type="tel" id="customerPhone" placeholder="Enter phone number">
+                <label>Phone Number (Optional)</label>
+                <input type="tel" id="customerPhone" placeholder="Enter phone number (optional)">
             </div>
             <div class="form-group">
                 <label>Address *</label>
@@ -400,7 +481,7 @@
         <div class="mode-buttons">
             <button class="btn btn-warning mode-btn mode-wait" onclick="filterByMode('wait')">⏳ WAIT MODE</button>
             <button class="btn btn-success mode-btn mode-ready" onclick="filterByMode('ready')">✅ READY MODE</button>
-            <button class="btn btn-info mode-btn mode-attempted" onclick="filterByMode('attempted')">📞 ATTEMPTED MODE</button>
+            <button class="btn btn-danger mode-btn mode-attempted" onclick="filterByMode('attempted')">📞 ATTEMPTED MODE</button>
         </div>
 
         <div id="customersContainer" class="customers-grid"></div>
@@ -470,25 +551,72 @@
             };
         }
 
+        // Show prompt dialog for table number
+        function showTableNumberPrompt(customer, onConfirm) {
+            const overlay = document.createElement('div');
+            overlay.className = 'prompt-overlay';
+            overlay.innerHTML = `
+                <div class="prompt-dialog">
+                    <h3>Assign Table Number</h3>
+                    <p>Please enter table number for ${customer.name}</p>
+                    <input type="text" id="tableNumberInput" placeholder="Enter table number (e.g., Table 5, T-10)" autocomplete="off">
+                    <div class="prompt-buttons">
+                        <button class="btn btn-danger" id="promptCancel">Cancel</button>
+                        <button class="btn btn-success" id="promptOk">OK</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            
+            const input = document.getElementById('tableNumberInput');
+            input.focus();
+            
+            document.getElementById('promptOk').onclick = () => {
+                const tableNumber = input.value.trim();
+                if (!tableNumber) {
+                    showAlert('Please enter a table number!', 'error');
+                    return;
+                }
+                onConfirm(tableNumber);
+                overlay.remove();
+            };
+            
+            document.getElementById('promptCancel').onclick = () => {
+                overlay.remove();
+            };
+            
+            // Allow Enter key to submit
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('promptOk').click();
+                }
+            });
+        }
+
         // Add customer
         function addCustomer() {
             const name = document.getElementById('customerName').value.trim();
+            const numberOfPeoples = document.getElementById('numberOfPeoples').value.trim();
+            const timeOption = document.getElementById('timeOption').value;
             const phone = document.getElementById('customerPhone').value.trim();
             const address = document.getElementById('customerAddress').value.trim();
             const assignedCaptain = document.getElementById('assignedCaptain').value.trim();
             
-            if (!name || !phone || !address) {
-                showAlert('Please fill all required fields!', 'error');
+            if (!name || !numberOfPeoples || !timeOption || !address) {
+                showAlert('Please fill all required fields (Name, Number of Peoples, Time, Address)!', 'error');
                 return;
             }
             
             const newCustomer = {
                 id: nextId++,
                 name: name,
-                phone: phone,
+                numberOfPeoples: numberOfPeoples,
+                time: timeOption,
+                phone: phone || 'Not provided',
                 address: address,
                 assignedCaptain: assignedCaptain || 'Not assigned',
                 status: 'wait',
+                tableNumber: null,
                 createdAt: new Date().toISOString()
             };
             
@@ -498,6 +626,8 @@
             
             // Clear form
             document.getElementById('customerName').value = '';
+            document.getElementById('numberOfPeoples').value = '';
+            document.getElementById('timeOption').value = '';
             document.getElementById('customerPhone').value = '';
             document.getElementById('customerAddress').value = '';
             document.getElementById('assignedCaptain').value = '';
@@ -512,16 +642,31 @@
             
             const statusNames = { wait: 'Waiting', ready: 'Ready', attempted: 'Attempted' };
             
-            // Show confirm box before attempting
-            showConfirm(
-                `Are you sure you want to change ${customer.name}'s status to ${statusNames[newStatus]}?`,
-                () => {
-                    customer.status = newStatus;
-                    saveCustomers();
-                    renderCustomers();
-                    showAlert(`${customer.name} status updated to ${statusNames[newStatus]}!`, 'success');
-                }
-            );
+            // If changing from wait to ready, ask for table number
+            if (customer.status === 'wait' && newStatus === 'ready') {
+                showTableNumberPrompt(customer, (tableNumber) => {
+                    showConfirm(
+                        `Are you sure you want to change ${customer.name}'s status to ${statusNames[newStatus]} with Table ${tableNumber}?`,
+                        () => {
+                            customer.status = newStatus;
+                            customer.tableNumber = tableNumber;
+                            saveCustomers();
+                            renderCustomers();
+                            showAlert(`${customer.name} status updated to ${statusNames[newStatus]}! Table: ${tableNumber}`, 'success');
+                        }
+                    );
+                });
+            } else {
+                showConfirm(
+                    `Are you sure you want to change ${customer.name}'s status to ${statusNames[newStatus]}?`,
+                    () => {
+                        customer.status = newStatus;
+                        saveCustomers();
+                        renderCustomers();
+                        showAlert(`${customer.name} status updated to ${statusNames[newStatus]}!`, 'success');
+                    }
+                );
+            }
         }
 
         // Delete customer with confirm
@@ -580,22 +725,25 @@
             document.getElementById('attemptedCount').textContent = customers.filter(c => c.status === 'attempted').length;
         }
 
-        // Render customers (first added first - maintaining order)
+        // Render customers
         function renderCustomers() {
             const container = document.getElementById('customersContainer');
             const filtered = getFilteredCustomers();
             
             if (filtered.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 50px; background: white; border-radius: 15px;">No customers found in this category</div>';
+                container.innerHTML = '<div style="text-align: center; padding: 50px; background: white; border-radius: 15px; color: black;">No customers found in this category</div>';
                 return;
             }
             
             container.innerHTML = filtered.map(customer => `
-                <div class="customer-card">
+                <div class="customer-card status-${customer.status}-card">
                     <div class="customer-name">${escapeHtml(customer.name)}</div>
-                    <div class="customer-details">📞 ${escapeHtml(customer.phone)}</div>
-                    <div class="customer-details">📍 ${escapeHtml(customer.address)}</div>
+                    <div class="customer-details">👥 Peoples: ${escapeHtml(customer.numberOfPeoples)}</div>
+                    <div class="customer-details">⏰ Time: ${escapeHtml(customer.time)}</div>
+                    <div class="customer-details">📞 Phone: ${escapeHtml(customer.phone)}</div>
+                    <div class="customer-details">📍 Address: ${escapeHtml(customer.address)}</div>
                     <div class="customer-details">🚕 Captain: ${escapeHtml(customer.assignedCaptain)}</div>
+                    ${customer.tableNumber ? `<div class="customer-details">🪑 Table: ${escapeHtml(customer.tableNumber)}</div>` : ''}
                     <div class="customer-details">🆔 ID: ${customer.id}</div>
                     <div class="customer-details">📅 Added: ${new Date(customer.createdAt).toLocaleDateString()}</div>
                     <div>
@@ -606,7 +754,7 @@
                     <div class="card-buttons">
                         <button class="btn btn-warning" onclick="updateStatus(${customer.id}, 'wait')">⏳ Set Wait</button>
                         <button class="btn btn-success" onclick="updateStatus(${customer.id}, 'ready')">✅ Set Ready</button>
-                        <button class="btn btn-info" onclick="updateStatus(${customer.id}, 'attempted')">📞 Set Attempted</button>
+                        <button class="btn btn-danger" onclick="updateStatus(${customer.id}, 'attempted')">📞 Set Attempted</button>
                         <button class="btn btn-danger" onclick="deleteCustomer(${customer.id})">🗑️ Delete</button>
                     </div>
                 </div>
