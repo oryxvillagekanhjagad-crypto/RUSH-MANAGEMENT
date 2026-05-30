@@ -492,7 +492,7 @@
                 createdAt: new Date().toISOString()
             };
             
-            customers.unshift(newCustomer); // Add to beginning for "first added first"
+            customers.push(newCustomer);
             saveCustomers();
             renderCustomers();
             
@@ -505,13 +505,14 @@
             showAlert(`Customer ${name} added successfully!`, 'success');
         }
 
-        // Update status with confirm
+        // Update status with confirm and alert
         function updateStatus(customerId, newStatus) {
             const customer = customers.find(c => c.id === customerId);
             if (!customer) return;
             
             const statusNames = { wait: 'Waiting', ready: 'Ready', attempted: 'Attempted' };
             
+            // Show confirm box before attempting
             showConfirm(
                 `Are you sure you want to change ${customer.name}'s status to ${statusNames[newStatus]}?`,
                 () => {
@@ -539,7 +540,7 @@
             );
         }
 
-        // Filter by mode
+        // Filter by mode with highlight
         function filterByMode(mode) {
             currentFilter = mode;
             
@@ -579,7 +580,7 @@
             document.getElementById('attemptedCount').textContent = customers.filter(c => c.status === 'attempted').length;
         }
 
-        // Render customers
+        // Render customers (first added first - maintaining order)
         function renderCustomers() {
             const container = document.getElementById('customersContainer');
             const filtered = getFilteredCustomers();
@@ -603,9 +604,9 @@
                         </span>
                     </div>
                     <div class="card-buttons">
-                        ${customer.status !== 'wait' ? `<button class="btn btn-warning" onclick="updateStatus(${customer.id}, 'wait')">⏳ Set Wait</button>` : ''}
-                        ${customer.status !== 'ready' ? `<button class="btn btn-success" onclick="updateStatus(${customer.id}, 'ready')">✅ Set Ready</button>` : ''}
-                        ${customer.status !== 'attempted' ? `<button class="btn btn-info" onclick="updateStatus(${customer.id}, 'attempted')">📞 Set Attempted</button>` : ''}
+                        <button class="btn btn-warning" onclick="updateStatus(${customer.id}, 'wait')">⏳ Set Wait</button>
+                        <button class="btn btn-success" onclick="updateStatus(${customer.id}, 'ready')">✅ Set Ready</button>
+                        <button class="btn btn-info" onclick="updateStatus(${customer.id}, 'attempted')">📞 Set Attempted</button>
                         <button class="btn btn-danger" onclick="deleteCustomer(${customer.id})">🗑️ Delete</button>
                     </div>
                 </div>
@@ -621,9 +622,6 @@
 
         // Initialize
         loadCustomers();
-        
-        // Set default active state for all mode (show all customers initially)
-        // No mode button is active by default, showing all customers
         renderCustomers();
     </script>
 </body>
